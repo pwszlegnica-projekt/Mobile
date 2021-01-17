@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/product_name_text"
+            android:id="@+id/list_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -47,12 +47,12 @@
             android:ems="10"
             android:textColor="#4C4949"
             android:textColorHint="#4C4949"
-            app:layout_constraintStart_toStartOf="@id/product_name"
+            app:layout_constraintStart_toStartOf="@id/list_name"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <Button
-        android:id="@+id/add_submit"
+        android:id="@+id/add_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="false"
