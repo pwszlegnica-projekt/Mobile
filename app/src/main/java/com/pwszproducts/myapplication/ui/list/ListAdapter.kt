@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pwszproducts.myapplication.R
 import com.pwszproducts.myapplication.data.model.ListItem
+import com.pwszproducts.myapplication.ui.products.ProductListActivity
 
 class ListAdapter(private val addedList: MutableList<ListItem>) :
     RecyclerView.Adapter<ListAdapter.ExampleViewHolder>() {
@@ -59,6 +60,13 @@ class ListAdapter(private val addedList: MutableList<ListItem>) :
         val currentItem = list[position]
 
         holder.listName.text = currentItem.name
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, ProductListActivity::class.java)
+            intent.putExtra("id", currentItem.id)
+            intent.putExtra("title", currentItem.name)
+            (context as Activity).startActivity(intent)
+        }
 
         holder.itemView.findViewById<Button>(R.id.update_element).setOnClickListener {
             Log.d("ADAPTER", "Clicked edit")
