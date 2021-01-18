@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.pwszproducts.myapplication.data.model.ListItem
 import java.util.ArrayList
 
-class ListViewModel(): ViewModel() {
+class ListViewModel: ViewModel() {
     private var adapter: ListAdapter = ListAdapter(generateEmptyList())
 
     fun addToAdapter(listItem: ListItem) {

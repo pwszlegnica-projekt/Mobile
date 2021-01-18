@@ -11,9 +11,16 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import com.pwszproducts.myapplication.R
 import com.pwszproducts.myapplication.data.model.ListItem
+import com.pwszproducts.myapplication.data.model.Lists.ResultList
+import com.pwszproducts.myapplication.data.model.ResultUser
+import com.pwszproducts.myapplication.data.model.StaticUserData
+import java.nio.charset.Charset
 
 class ListActivity : AppCompatActivity() {
 
@@ -22,7 +29,7 @@ class ListActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ListViewModel
     private lateinit var textMessage: TextView
-    private var lastId: Int = 0;
+    private var lastId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +41,8 @@ class ListActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         viewModel.getAdapter().context = this
+
+        downloadList()
 
         if(viewModel.getAdapter().itemCount == 0) {
             textMessage.text = "Nie posiadasz żadnych elementów na liście"
@@ -50,6 +59,50 @@ class ListActivity : AppCompatActivity() {
         }
 
         Log.d("INTENT", "Is intent ${intent.hasExtra("data")}")
+    }
+
+    fun downloadList() {
+        val url = "https://list.kamilcraft.com/api/lists"
+
+        val stringRequest = object: JsonObjectRequest(
+            Method.GET, url, null,
+            {
+                val gson = Gson()
+                val user = gson.fromJson(it.toString(), ResultList::class.java)
+                val success = user.success
+                val lists = user.lists
+
+                if(success && lists != null) {
+                    Log.d("LIST", "Status TRUE");
+                    for(elementList in lists) {
+                        Log.d("LIST", "Loaded: ${elementList.id}");
+                        viewModel.addToAdapter(ListItem(elementList.id, elementList.name))
+                    }
+                    if(viewModel.getAdapter().itemCount > 0) {
+                        textMessage.text = ""
+                    }
+                } else {
+                    Log.d("LIST", "Other status: $success, ${it.toString()}");
+                }
+            },
+            {
+                val errorMessage = String(it.networkResponse.data, Charsets.UTF_8)
+                Log.d("LIST", "Error: $errorMessage");
+                Toast.makeText(this,
+                    "Wystąpił błąd podczas pobierania danych! ${errorMessage}",
+                    Toast.LENGTH_LONG).show()
+            }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer ${StaticUserData.token.token}"
+                headers["Accept"] = "application/json"
+                headers["Content-Type"] = "application/json"
+                return headers
+            }
+        }
+
+        Volley.newRequestQueue(this).add(stringRequest)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

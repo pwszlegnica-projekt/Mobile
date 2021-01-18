@@ -14,12 +14,11 @@ import com.pwszproducts.myapplication.R
 import com.pwszproducts.myapplication.data.model.ListItem
 import com.pwszproducts.myapplication.ui.products.ProductListActivity
 
-class ListAdapter(private val addedList: MutableList<ListItem>) :
+class ListAdapter(var list: MutableList<ListItem>) :
     RecyclerView.Adapter<ListAdapter.ExampleViewHolder>() {
 
     lateinit var context: Context
     private val UPDATE_LIST = 2
-    private var list: MutableList<ListItem> = addedList
 
     class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val listName: TextView = itemView.findViewById(R.id.list_name)

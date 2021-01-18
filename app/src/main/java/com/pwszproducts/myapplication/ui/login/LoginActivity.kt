@@ -10,18 +10,11 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.pwszproducts.myapplication.R
+import com.pwszproducts.myapplication.data.model.ResultLogin
+import com.pwszproducts.myapplication.data.model.ResultUser
+import com.pwszproducts.myapplication.data.model.StaticUserData
 import com.pwszproducts.myapplication.ui.list.ListActivity
 import org.json.JSONObject
-
-data class resultLogin (var token: String)
-data class resultUser (
-        var id: Int,
-        var name: String,
-        var email: String,
-        var email_verified_at: String?,
-        var created_at: String,
-        var updated_at: String
-    )
 
 data class Errors (
         var email: List<String>? = null,
@@ -82,7 +75,9 @@ class LoginActivity: AppCompatActivity() {
                     passwordError.text = ""
 
                     val gson = Gson()
-                    val myToken = gson.fromJson(response.toString(), resultLogin::class.java)
+                    val myToken = gson.fromJson(response.toString(), ResultLogin::class.java)
+
+                    StaticUserData.token = myToken
 
                     getUser(myToken.token)
                 },
@@ -130,12 +125,14 @@ class LoginActivity: AppCompatActivity() {
         val stringRequest = object: JsonObjectRequest(Method.GET, url, null,
                 { response ->
                     val gson = Gson()
-                    val user = gson.fromJson(response.toString(), resultUser::class.java)
+                    val user = gson.fromJson(response.toString(), ResultUser::class.java)
+
+                    StaticUserData.user = user
 
                     Toast.makeText(this,
-                            "Witaj ${user.name}!",
+                            "Witaj ${StaticUserData.user.name}!",
                             Toast.LENGTH_SHORT).show()
-                    openListActivity(token)
+                    openListActivity()
                 },
                 {
                     Toast.makeText(this,
@@ -155,9 +152,8 @@ class LoginActivity: AppCompatActivity() {
         Volley.newRequestQueue(this).add(stringRequest)
     }
 
-    fun openListActivity(token: String) {
+    fun openListActivity() {
         val intent = Intent(this, ListActivity::class.java)
-        intent.putExtra("token", token)
         startActivity(intent)
     }
 
@@ -166,7 +162,7 @@ class LoginActivity: AppCompatActivity() {
         if(requestCode == REGISTERED && resultCode == RESULT_OK) {
             Toast.makeText(this, "Witaj ${data?.getStringExtra("name")}!",
                     Toast.LENGTH_SHORT).show()
-            intent.getStringExtra("token")?.let { openListActivity(it) }
+            openListActivity()
         }
     }
 }
