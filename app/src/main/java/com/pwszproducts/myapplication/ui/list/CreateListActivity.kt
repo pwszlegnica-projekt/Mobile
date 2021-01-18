@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pwszproducts.myapplication.R
 
@@ -25,10 +26,16 @@ class CreateListActivity: AppCompatActivity() {
     }
 
     fun comebackToParent() {
-        val intent = Intent()
-        intent.putExtra("name", editText.text.toString())
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+        if(editText.text.length in 3..30) {
+            val intent = Intent()
+            intent.putExtra("name", editText.text.toString())
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        } else {
+            Toast.makeText(this,
+                "Tekst musi posiadać przynajmniej 3 znaki i maksymalnie 30"
+                , Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

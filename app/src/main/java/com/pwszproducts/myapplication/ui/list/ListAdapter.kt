@@ -1,15 +1,23 @@
 package com.pwszproducts.myapplication.ui.list
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pwszproducts.myapplication.R
 import com.pwszproducts.myapplication.data.model.ListItem
 
-class ListAdapter(private val addedList: MutableList<ListItem>) : RecyclerView.Adapter<ListAdapter.ExampleViewHolder>() {
+class ListAdapter(private val addedList: MutableList<ListItem>) :
+    RecyclerView.Adapter<ListAdapter.ExampleViewHolder>() {
 
+    lateinit var context: Context
+    private val UPDATE_LIST = 2
     private var list: MutableList<ListItem> = addedList
 
     class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,11 +38,19 @@ class ListAdapter(private val addedList: MutableList<ListItem>) : RecyclerView.A
         notifyItemInserted(list.size - 1)
     }
 
-    fun removeWithList(index: Int) {
-        list.removeAt(index)
+    fun removeWithList(id: Int) {
+        val itemList = list.find { it.id == id }
+        list.remove(itemList)
 
         notifyDataSetChanged()
         notifyItemInserted(list.size - 1)
+    }
+
+    fun updateInList(id: Int, name: String) {
+        list.filter { it.id == id }.forEach {
+            it.name = name
+        }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = list.size
@@ -43,5 +59,13 @@ class ListAdapter(private val addedList: MutableList<ListItem>) : RecyclerView.A
         val currentItem = list[position]
 
         holder.listName.text = currentItem.name
+
+        holder.itemView.findViewById<Button>(R.id.update_element).setOnClickListener {
+            Log.d("ADAPTER", "Clicked edit")
+            val intent = Intent(context, UpdateListActivity::class.java)
+            intent.putExtra("id", currentItem.id)
+            intent.putExtra("name", currentItem.name)
+            (context as Activity).startActivityForResult(intent, UPDATE_LIST)
+        }
     }
 }
