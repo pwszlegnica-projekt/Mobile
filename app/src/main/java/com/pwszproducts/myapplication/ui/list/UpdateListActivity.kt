@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import com.pwszproducts.myapplication.R
 import com.pwszproducts.myapplication.data.model.ListItem
 import com.pwszproducts.myapplication.data.model.Lists.ResultList
+import com.pwszproducts.myapplication.data.model.Lists.ResultListDelete
 import com.pwszproducts.myapplication.data.model.Lists.ResultListUpdate
 import com.pwszproducts.myapplication.data.model.StaticUserData
 import org.json.JSONObject
@@ -104,16 +105,59 @@ class UpdateListActivity: AppCompatActivity() {
         }
     }
 
+    fun sendDelete() {
+        val id: Int = intent.getIntExtra("id", 0)
+        val url = "https://list.kamilcraft.com/api/list/$id"
+
+        val params: MutableMap<String, String> = HashMap()
+        params["name"] = String(listName.text.toString().toByteArray(), Charsets.UTF_8)
+
+        val jsonObject = JSONObject(params as Map<*, *>)
+
+        val stringRequest = object: JsonObjectRequest(
+            Method.DELETE, url, jsonObject,
+            {
+                val result = Gson().fromJson(it.toString(), ResultListDelete::class.java)
+
+                if(result.success) {
+
+                    val intent = Intent()
+                    intent.putExtra("id", id)
+                    intent.putExtra("submit_type", "delete")
+                    sendIntent(intent)
+
+                } else {
+                    Toast.makeText(this, "Coś poszło nie tak!", Toast.LENGTH_LONG).show()
+                }
+            },
+            {
+                val errorMessage = String(it.networkResponse.data, Charsets.UTF_8)
+                Log.d("LIST", "Error: $errorMessage");
+                Toast.makeText(this,
+                    "Wystąpił błąd podczas przesyłania! ${errorMessage}",
+                    Toast.LENGTH_LONG).show()
+            }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer ${StaticUserData.token.token}"
+                headers["Accept"] = "application/json"
+                headers["Content-Type"] = "application/json"
+                return headers
+            }
+        }
+
+        Volley.newRequestQueue(this).add(stringRequest)
+    }
+
     fun delete() {
         val id: Int = intent.getIntExtra("id", 0)
-        val intent = Intent()
         if(id > 0) {
-            intent.putExtra("id", id)
-            intent.putExtra("submit_type", "delete")
+            sendDelete()
         } else {
             Toast.makeText(this, "Coś poszło nie tak!", Toast.LENGTH_LONG).show()
         }
-        sendIntent(intent)
+
     }
 
     fun sendIntent(intent: Intent) {

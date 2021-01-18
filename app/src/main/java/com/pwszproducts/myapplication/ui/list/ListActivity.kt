@@ -147,7 +147,7 @@ class ListActivity : AppCompatActivity() {
                     .makeText(this, "Usunięto listę!", Toast.LENGTH_SHORT)
                     .show()
                 if(viewModel.getAdapter().itemCount == 0) {
-                    textMessage.text = "Nie posiadasz żadnych elementów na liście"
+                    textMessage.text = "Nie posiadasz żadnych elementów na liście."
                 }
             }
         }
