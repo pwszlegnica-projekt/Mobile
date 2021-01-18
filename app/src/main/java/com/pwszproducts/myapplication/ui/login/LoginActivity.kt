@@ -135,7 +135,7 @@ class LoginActivity: AppCompatActivity() {
                     Toast.makeText(this,
                             "Witaj ${user.name}!",
                             Toast.LENGTH_SHORT).show()
-                    openNewActivity()
+                    openListActivity(token)
                 },
                 {
                     Toast.makeText(this,
@@ -155,8 +155,9 @@ class LoginActivity: AppCompatActivity() {
         Volley.newRequestQueue(this).add(stringRequest)
     }
 
-    fun openNewActivity() {
+    fun openListActivity(token: String) {
         val intent = Intent(this, ListActivity::class.java)
+        intent.putExtra("token", token)
         startActivity(intent)
     }
 
@@ -165,7 +166,7 @@ class LoginActivity: AppCompatActivity() {
         if(requestCode == REGISTERED && resultCode == RESULT_OK) {
             Toast.makeText(this, "Witaj ${data?.getStringExtra("name")}!",
                     Toast.LENGTH_SHORT).show()
-            openNewActivity()
+            intent.getStringExtra("token")?.let { openListActivity(it) }
         }
     }
 }
