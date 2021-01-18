@@ -2,11 +2,10 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.login.LoginActivity">
+    tools:context=".ui.login.RegisterActivity">
 
 
     <RelativeLayout
@@ -21,16 +20,28 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
             android:fontFamily="serif"
-            android:text="@string/hello"
+            android:text="@string/register_hello"
             android:textColor="#292727"
             android:textSize="36sp"
             app:autoSizeTextType="uniform" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/name"
             android:layout_width="300dp"
             android:layout_height="72dp"
             android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:hint="@string/prompt_name"
+            android:selectAllOnFocus="true"
+            android:textColor="#4C4949"
+            android:textColorHint="#4C4949" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="300dp"
+            android:layout_height="72dp"
+            android:layout_below="@+id/name"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:hint="@string/prompt_email"
@@ -55,7 +66,7 @@
             android:textColorHint="#4C4949" />
 
         <Button
-            android:id="@+id/sign_in"
+            android:id="@+id/submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
@@ -65,21 +76,8 @@
             android:background="#8BC34A"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="@string/action_sign_in"
-            android:textColor="#393939" />
-
-        <Button
-            android:id="@+id/register_click"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sign_in"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:background="@android:color/transparent"
             android:text="@string/action_register"
-            android:textColor="#2196F3"
-            android:textSize="18sp"
-            app:autoSizeTextType="none" />
+            android:textColor="#393939" />
 
         <ProgressBar
             android:id="@+id/loading"

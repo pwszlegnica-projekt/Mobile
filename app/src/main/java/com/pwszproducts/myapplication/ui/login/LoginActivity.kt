@@ -3,6 +3,7 @@ package com.pwszproducts.myapplication.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.Response
@@ -20,9 +21,15 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val buttonLogin = findViewById<Button>(R.id.login)
+        val buttonLogin = findViewById<Button>(R.id.sign_in)
+        val buttonRegister = findViewById<Button>(R.id.register_click)
 
         buttonLogin.isEnabled = true
+
+        buttonRegister.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
 
         buttonLogin.setOnClickListener {
             openNewActivity()
