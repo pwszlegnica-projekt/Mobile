@@ -115,10 +115,11 @@ class ListActivity : AppCompatActivity() {
     }
 
     fun createList(data: Intent?) {
-        val result: String = data?.getStringExtra("name").toString()
+        val id: Int = data!!.getIntExtra("id", 0)
+        val result: String = data.getStringExtra("name").toString()
         textMessage.text = ""
 
-        viewModel.addToAdapter(ListItem(++lastId, result))
+        viewModel.addToAdapter(ListItem(id, result))
     }
 
     fun createListActivity() {
