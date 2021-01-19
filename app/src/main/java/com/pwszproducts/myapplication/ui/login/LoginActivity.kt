@@ -160,7 +160,7 @@ class LoginActivity: AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == REGISTERED && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Witaj ${data?.getStringExtra("name")}!",
+            Toast.makeText(this, "Witaj ${StaticUserData.user.name}!",
                     Toast.LENGTH_SHORT).show()
             openListActivity()
         }
